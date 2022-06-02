@@ -61,8 +61,8 @@ async function main() {
 	gl.getExtension('OES_standard_derivatives');
 
 	// Match viewport/clipspace resolution to canvas resolution
-	gl.canvas.width = 800;
-	gl.canvas.height = 450;
+	gl.canvas.width = 400;
+	gl.canvas.height = 225;
 	webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
 	// Tell WebGL how to convert from clip space to pixels
@@ -72,61 +72,47 @@ async function main() {
 	// gl.enable(gl.CULL_FACE);
 	gl.enable(gl.DEPTH_TEST);
 
-	//* Load shaders to build programs dictionary
-	var programs = {};
-	programs.phongShading = await createProgramGivenShaderFiles(gl, "phong_vert.glsl", "phong_frag.glsl");
-
-
-
+	// Load shaders to build programs dictionary
+	var program = await createProgramGivenShaderFiles(gl, "vert.glsl", "frag.glsl");
 	
 
-	
+	// Store vertices data into buffer
+	gl.useProgram(program);
+	var positionBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	var positions = [
+		-1, -1,
+		-1, 1,
+		1, 1,
+		-1, -1,
+		1, 1,
+		1, -1
+	];
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+	// Bind buffer to attrib
+	gl.useProgram(program);
+	var positionAttribLocation = gl.getAttribLocation(program, "a_position");
+	gl.enableVertexAttribArray(positionAttribLocation);
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	var size = 2;          // 2 components per iteration
+	var type = gl.FLOAT;   // the data is 32bit floats
+	var normalize = false; // don't normalize the data
+	var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+	var offset = 0;        // start at the beginning of the buffer
+	gl.vertexAttribPointer(positionAttribLocation, size, type, normalize, stride, offset);
 
 	// Draw scene
-	drawScene(gl, objects, lights);
+	drawScene(gl, program);
 }
 
-function drawScene(gl, objects, lights) {
+function drawScene(/** @type {WebGLRenderingContext} */gl, program) {
 	// Draw a new scene, erase previous stuff
 	gl.clearColor(0.0, 0.2, 0.2, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-	// Draw objects
-	for(var i=0; i<objects.length; i++) {
-		drawObject(gl, objects[i], lights);
-	}
-	
-
+	draw(gl, program, 6);
 }
-function drawObject(/** @type {WebGLRenderingContext} */gl, object, lights) {
-	
-	// Write data into view uniform
-	setViewMatUniform(gl, object.program, object.view_cameraRotateRadius, object.view_cameraRotateAngle);
 
-	// Write data into projection uniform
-	// var projection_matrix = m4.ortho_projection(left, right, bottom, top, near, far);
-	var projection_matrix = m4.perspective_projection(object.projection_fov, object.projection_aspect_ration, 
-														object.projection_near, object.projection_far);
-	gl.useProgram(object.program);
-	gl.uniformMatrix4fv(gl.getUniformLocation(object.program, "u_projection"), false, m4.transpose(projection_matrix));
-
-	// Set initial data for positionBuffer and moveOrigin uniform, colorBuffer, normalBuffer, transform uniform, lightDir uniform
-	var drawCount = object.vertexCount;
-	
-	setDataForGeometry(gl, object.program, object.positionBuffer);
-
-	setBufferDataForColor(gl, object.program, object.colorBuffer);
-
-	setBufferDataForNormal(gl, object.program, object.normalBuffer);
-
-	setTransformMatUniform(gl, object.program, object.transform_translation, object.transform_rotation, object.transform_scale, object.transform_shear);
-
-	gl.useProgram(object.program);
-
-
-	// Draw
-	draw(gl, object.program, drawCount);
-}
 function draw(/** @type {WebGLRenderingContext} */gl, program, drawCount) {
 	// Draw
 	gl.useProgram(program);

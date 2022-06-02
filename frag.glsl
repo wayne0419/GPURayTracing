@@ -2,12 +2,11 @@
 // to pick one. mediump is a good default
 precision mediump float;
 
-varying vec4 v_color;
-
 void main() {
 	// gl_FragColor is a special variable a fragment shader 
 	// is responsible for setting
-	
+
+
 	//! For gl_FragColor, all channels' value are clamped to [0,1].
-	gl_FragColor = v_color;
+	gl_FragColor = vec4(0, 1, 0, 1);
 }
