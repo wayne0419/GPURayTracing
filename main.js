@@ -59,6 +59,7 @@ async function main() {
 		return;
 	}
 	gl.getExtension('OES_standard_derivatives');
+	gl.getExtension('GOOGLE_include_directive');
 
 	// Match viewport/clipspace resolution to canvas resolution
 	gl.canvas.width = 400;
@@ -73,7 +74,7 @@ async function main() {
 	gl.enable(gl.DEPTH_TEST);
 
 	// Load shaders to build programs dictionary
-	var program = await createProgramGivenShaderFiles(gl, "vert.glsl", "frag.glsl");
+	var program = await createProgramGivenShaderFiles(gl, "raytrace.vert", "raytrace.frag");
 	
 
 	// Store vertices data into buffer
@@ -101,6 +102,9 @@ async function main() {
 	var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
 	var offset = 0;        // start at the beginning of the buffer
 	gl.vertexAttribPointer(positionAttribLocation, size, type, normalize, stride, offset);
+
+	// Seut uniforms
+	gl.uniform2fv(gl.getUniformLocation(program, "u_resolution"), [gl.canvas.width, gl.canvas.height]);
 
 	// Draw scene
 	drawScene(gl, program);
