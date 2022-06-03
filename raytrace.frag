@@ -3,8 +3,13 @@
 precision mediump float;
 #define color4 vec4
 #define color3 vec3
+#define point3 vec3
+
 const float INF = 9999999999.9;
+const float PI = 3.1415926535897932385;
 const int MAX_NUM_SPHERES = 100000;
+const int NUM_AA_SAMPLES = 100;
+
 // Camera
 struct Camera{
 	vec3 origin;
@@ -85,9 +90,17 @@ bool hit_sphere(Ray r, Sphere sphere, float t_min, float t_max, out Hit_record r
 	return true;
 }
 
+// Utilities
+float RAND_SEED = 0.0;
+float rand() {
+	RAND_SEED += 1.0;
+	return fract(RAND_SEED * sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+
 
 // RayTrace
-color3 RayColor(Ray r, Sphere spheres[1], int numSpheres) {
+color3 RayColor(Ray r, Sphere spheres[2], int numSpheres) {
 	// Find closest hit
 	bool hit = false;
 	float closest_t = INF;
@@ -95,7 +108,7 @@ color3 RayColor(Ray r, Sphere spheres[1], int numSpheres) {
 	for(int i=0; i<MAX_NUM_SPHERES; i++) {
 		if (i >= numSpheres) break;
 		Hit_record rec;
-		if(hit_sphere(r, spheres[i], 0.1, INF, rec) && rec.t < closest_t) {
+		if(hit_sphere(r, spheres[i], 0.0, INF, rec) && rec.t < closest_t) {
 			hit = true;
 			closest_t = rec.t;
 			closest_hit_rec = rec;
@@ -130,18 +143,25 @@ void main() {
 	cam.vertical = vec3(0.0, cam.viewport_height, 0.0);
 
 	// Spheres
-	Sphere spheres[1];
+	Sphere spheres[2];
 	spheres[0] = Sphere(vec3(0, 0, -1), 0.5);
-	int numSpheres = 1;
+	spheres[1] = Sphere(vec3(0,-100.5,-1), 100.0);
+	int numSpheres = 2;
 
 	// Shoot Ray
-	Ray r;
-	r.origin = cam.origin;
-	r.direction = (gl_FragCoord.xy / u_resolution).x * cam.horizontal
-				+ (gl_FragCoord.xy / u_resolution).y * cam.vertical
-				+ cam.lower_left_corner
-				- cam.origin;
-	r.direction = normalize(r.direction);
-	gl_FragColor = vec4(RayColor(r, spheres, numSpheres), 1);
+	color3 pixel_color = color3(0,0,0);
+	for(int i=0; i<NUM_AA_SAMPLES; i++) {
+		Ray r;
+		r.origin = cam.origin;
+		r.direction = ((gl_FragCoord.x + rand()) / u_resolution.x) * cam.horizontal
+					+ ((gl_FragCoord.y + rand()) / u_resolution.y) * cam.vertical
+					+ cam.lower_left_corner
+					- cam.origin;
+		r.direction = normalize(r.direction);
+		pixel_color = pixel_color + RayColor(r, spheres, numSpheres);
+	}
+
+	gl_FragColor = vec4(pixel_color/float(NUM_AA_SAMPLES), 1);
+
 	
 }
