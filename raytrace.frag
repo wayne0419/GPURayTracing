@@ -7,7 +7,7 @@ const float INF = 9999999999.9;
 const float PI = 3.1415926535897932385;
 const int MAX_NUM_SPHERES = 10;
 const int NUM_AA_SAMPLES = 100;
-const int MAX_NUM_RAY_BOUNCE = 50;
+const int MAX_NUM_RAY_BOUNCE = 10;
 
 uniform vec2 u_resolution;
 
@@ -132,6 +132,9 @@ struct Sphere{
 	float radius;
 	Material mat;
 };
+
+uniform Sphere spheres[MAX_NUM_SPHERES];
+uniform int numSpheres;
 #pragma endregion
 
 #pragma region Hit

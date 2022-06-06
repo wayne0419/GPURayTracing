@@ -13,5 +13,11 @@ v3 = {
 		var length = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 		length = Math.max(length, 0.00001);
 		return [v[0]/length, v[1]/length, v[2]/length];
+	},
+	random: function() {
+		return [Math.random(), Math.random(), Math.random()];
+	},
+	length: function(v) {
+		return Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 	}
 };

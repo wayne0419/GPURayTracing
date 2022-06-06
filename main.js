@@ -48,6 +48,24 @@ async function createProgramGivenShaderFiles(/** @type {WebGLRenderingContext} *
 	return program;
 }
 
+function setObjectsUniforms(/** @type {WebGLRenderingContext} */gl, program, objects) {
+	gl.useProgram(program);
+	var numSpheres = objects.length;
+	gl.uniform1i(gl.getUniformLocation(program, "u_numSpheres"), numSpheres);
+	for(var i=0; i<numSpheres; i++) {
+		var sphere = objects[i];
+		var sphereName = "u_spheres[" + String(i) + "]";
+		gl.uniform3fv(gl.getUniformLocation(program, sphereName + ".center"), sphere.center);
+		gl.uniform1f(gl.getUniformLocation(program, sphereName + ".radius"), sphere.radius);
+		var sphereMaterialName = sphereName + ".mat";
+		gl.uniform1i(gl.getUniformLocation(program, sphereMaterialName + ".mat_index"), sphere.mat.mat_index);
+		gl.uniform3fv(gl.getUniformLocation(program, sphereMaterialName + ".albedo"), sphere.mat.albedo);
+		gl.uniform1f(gl.getUniformLocation(program, sphereMaterialName + ".metal_fuzz"), sphere.mat.metal_fuzz);
+		gl.uniform1f(gl.getUniformLocation(program, sphereMaterialName + ".index_of_refraction"), sphere.mat.index_of_refraction);
+
+	}
+}
+
 
 async function main() {
 	// Get A WebGL context
@@ -103,9 +121,11 @@ async function main() {
 	var offset = 0;        // start at the beginning of the buffer
 	gl.vertexAttribPointer(positionAttribLocation, size, type, normalize, stride, offset);
 
-	// Seut uniforms
+	// Set uniforms
 	gl.uniform2fv(gl.getUniformLocation(program, "u_resolution"), [gl.canvas.width, gl.canvas.height]);
-
+	var objects = random_scene3();
+	setObjectsUniforms(gl, program, objects);
+	
 	// Draw scene
 	drawScene(gl, program);
 }
