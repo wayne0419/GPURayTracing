@@ -11,22 +11,52 @@ const int MAX_NUM_RAY_BOUNCE = 50;
 
 uniform vec2 u_resolution;
 
+#pragma region Debug
 // Debug
 bool DEBUG_MARK = false;
+#pragma endregion
 
-// Camera
-struct Camera{
-	vec3 origin;
-	float focal_length;
-	float aspect_ratio;
-	float fov;
-	float viewport_width;
-	float viewport_height;
-	vec3 lower_left_corner;
-	vec3 horizontal;
-	vec3 vertical;
-};
+#pragma region Random
+// Random
+float RAND_SEED = 1.0;
+float rand() {
+	RAND_SEED = RAND_SEED + 0.01;
+	return fract(sin(RAND_SEED * dot(gl_FragCoord.xy / u_resolution, vec2(12.9898, 78.233))) * 43758.5453);
+}
+vec3 rand3() {
+	return vec3(rand(), rand(), rand());
+}
+vec3 rand3_in_unit_sphere() {
+	float r = rand();
+	float theta = rand() * PI;
+	float phi = rand() * 2.0 * PI;
+	float x = r * cos(phi) * sin(theta);
+	float y = r * sin(phi) * sin(theta);
+	float z = r * cos(theta);
+	return vec3(x,y,z);
 
+}
+vec3 rand3_unit() {
+	float r = 1.0;
+	float theta = rand() * PI;
+	float phi = rand() * 2.0 * PI;
+	float x = r * cos(phi) * sin(theta);
+	float y = r * sin(phi) * sin(theta);
+	float z = r * cos(theta);
+	return vec3(x,y,z);
+	// return normalize(rand3_in_unit_sphere());	//! normalize a zero vector cause bugs	//! TODO: document this avoiding-bug method
+}
+#pragma endregion
+
+#pragma region Utilities
+// Utilities
+bool near_zero(vec3 v) {
+	float s = 1e-8;
+	return (abs(v[0]) < s) && (abs(v[1]) < s) && (abs(v[2]) < s);
+}
+#pragma endregion
+
+#pragma region Ray
 // Ray
 struct Ray{
 	vec3 origin;
@@ -36,6 +66,54 @@ struct Ray{
 vec3 ray_at(Ray r, float t) {
 	return r.origin + t * r.direction;
 }
+#pragma endregion
+
+#pragma region Camera
+// Camera
+struct Camera{
+	vec3 origin;
+	float focal_length;
+	float aspect_ratio;
+	float vfov;
+	float viewport_width;
+	float viewport_height;
+	vec3 lower_left_corner;
+	vec3 horizontal;
+	vec3 vertical;
+	vec3 u, v, w;
+};
+void set_camera(out Camera cam, vec3 lookfrom, vec3 lookat, vec3 vup, float vfov, float aspect_ratio) {
+	
+	cam.origin = lookfrom;
+	cam.w = normalize(lookfrom - lookat);
+	cam.u = normalize(cross(vup, cam.w));
+	cam.v = cross(cam.w, cam.u);
+
+	cam.focal_length = 1.0;
+	
+	cam.aspect_ratio = aspect_ratio;
+	
+	cam.vfov = vfov;
+	cam.viewport_height = cam.focal_length * tan(radians(cam.vfov) / 2.0) * 2.0;
+	cam.viewport_width = cam.viewport_height * cam.aspect_ratio;
+	cam.lower_left_corner = cam.origin - cam.w * cam.focal_length
+									   - cam.u * cam.viewport_width/2.0
+									   - cam.v * cam.viewport_height/2.0;
+	cam.horizontal = cam.u * cam.viewport_width;
+	cam.vertical = cam.v * cam.viewport_height;
+}
+void get_camera_ray(out Ray r, Camera cam) {
+	r.origin = cam.origin;
+	r.direction = ((gl_FragCoord.x + rand()) / u_resolution.x) * cam.horizontal
+				+ ((gl_FragCoord.y + rand()) / u_resolution.y) * cam.vertical
+				+ cam.lower_left_corner
+				- cam.origin;
+	r.direction = normalize(r.direction);
+}
+#pragma endregion
+
+
+#pragma region Material
 // Material
 struct Material{
 	int mat_index;	// 0: diffuse
@@ -45,15 +123,18 @@ struct Material{
 	float metal_fuzz;
 	float index_of_refraction;
 };
+#pragma endregion
 
+#pragma region Objects
 // Objects
 struct Sphere{
 	vec3 center;
 	float radius;
 	Material mat;
 };
+#pragma endregion
 
-
+#pragma region Hit
 //  Hit
 struct Hit_record{
 	vec3 p;
@@ -122,44 +203,10 @@ bool hit_spheres(Ray r, Sphere spheres[MAX_NUM_SPHERES], int numSpheres, float t
 	rec = closest_hit_rec;
 	return hit;
 }
-
-// Random
-float RAND_SEED = 1.0;
-float rand() {
-	RAND_SEED = RAND_SEED + 0.01;
-	return fract(sin(RAND_SEED * dot(gl_FragCoord.xy / u_resolution, vec2(12.9898, 78.233))) * 43758.5453);
-}
-vec3 rand3() {
-	return vec3(rand(), rand(), rand());
-}
-vec3 rand3_in_unit_sphere() {
-	float r = rand();
-	float theta = rand() * PI;
-	float phi = rand() * 2.0 * PI;
-	float x = r * cos(phi) * sin(theta);
-	float y = r * sin(phi) * sin(theta);
-	float z = r * cos(theta);
-	return vec3(x,y,z);
-
-}
-vec3 rand3_unit() {
-	float r = 1.0;
-	float theta = rand() * PI;
-	float phi = rand() * 2.0 * PI;
-	float x = r * cos(phi) * sin(theta);
-	float y = r * sin(phi) * sin(theta);
-	float z = r * cos(theta);
-	return vec3(x,y,z);
-	// return normalize(rand3_in_unit_sphere());	//! normalize a zero vector cause bugs	//! TODO: document this avoiding-bug method
-}
-
-// Utilities
-bool near_zero(vec3 v) {
-	float s = 1e-8;
-	return (abs(v[0]) < s) && (abs(v[1]) < s) && (abs(v[2]) < s);
-}
+#pragma endregion
 
 
+#pragma region RayTrace
 // RayTrace
 bool diffuseScatter(Ray in_r, Hit_record rec, out Ray out_r, out vec3 attenuation) {
 	vec3 direction = rec.normal + rand3_unit();
@@ -224,23 +271,19 @@ vec3 RayColor(Ray r, Sphere spheres[MAX_NUM_SPHERES], int numSpheres) {
 	
     return total_attenuation * sky_color;
 }
-
+#pragma endregion
 
 
 void main() {
 	// Camera
 	Camera cam;
-	cam.origin = vec3(0, 0, 0);
-	cam.focal_length = 1.0;
-	cam.aspect_ratio = 16.0/9.0;
-	cam.fov = 90.0;
-	cam.viewport_width = cam.focal_length * tan(cam.fov / 2.0) * 2.0;
-	cam.viewport_height = cam.viewport_width / cam.aspect_ratio;
-	cam.lower_left_corner = cam.origin - vec3(0, 0, cam.focal_length) 
-									   - vec3(cam.viewport_width/2.0, 0.0, 0.0) 
-									   - vec3(0.0, cam.viewport_height/2.0, 0.0);
-	cam.horizontal = vec3(cam.viewport_width, 0.0, 0.0);
-	cam.vertical = vec3(0.0, cam.viewport_height, 0.0);
+	vec3 lookfrom = vec3(-2,2,1);
+	vec3 lookat = vec3(0,0,-1);
+	vec3 vup = vec3(0, 1, 0);
+	float aspect_ratio = 16.0/9.0;
+	float vfov = 90.0;
+
+	set_camera(cam, lookfrom, lookat, vup, vfov, aspect_ratio);
 
 	// Spheres
 	Sphere spheres[MAX_NUM_SPHERES];
@@ -260,12 +303,7 @@ void main() {
 	vec3 pixel_color = vec3(0,0,0);
 	for(int i=0; i<NUM_AA_SAMPLES; i++) {
 		Ray r;
-		r.origin = cam.origin;
-		r.direction = ((gl_FragCoord.x + rand()) / u_resolution.x) * cam.horizontal
-					+ ((gl_FragCoord.y + rand()) / u_resolution.y) * cam.vertical
-					+ cam.lower_left_corner
-					- cam.origin;
-		r.direction = normalize(r.direction);
+		get_camera_ray(r, cam);
 		pixel_color = pixel_color + RayColor(r, spheres, numSpheres);
 	}
 	pixel_color = pixel_color/float(NUM_AA_SAMPLES);
