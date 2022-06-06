@@ -30,19 +30,19 @@ function random_scene3() {
     var ground_material = new Material(0, [0.5, 0.5, 0.5], 0, 0);
     world.push(new Sphere([0,-1000,0], 1000, ground_material));
 
-    for (var a = -11; a < 11; a++) {
-        for (var b = -11; b < 11; b++) {
+    for (var a = -3; a < 3; a++) {
+        for (var b = -3; b < 3; b++) {
             var choose_mat = Math.random();
             var center = [a + 0.9*Math.random(), 0.2, b + 0.9*Math.random()];
             if (v3.length(v3.subtract(center, [4, 0.2, 0])) > 0.9) {
 
                 if (choose_mat < 0.8) {
                     // diffuse
-                    var albedo = v3.random() * v3.random();
+                    var albedo = v3.multiply(v3.random(), v3.random());
                     world.push(new Sphere(center, 0.2, new Material(0, albedo, 0, 0)));
                 } else if (choose_mat < 0.95) {
                     // metal
-                    var albedo = 0.5 * v3.random() + 0.5;
+                    var albedo = v3.addScalar(v3.multiplyScalar(v3.random(), 0.5), 0.5);
                     var fuzz = 0.5 * Math.random();
                     world.push(new Sphere(center, 0.2, new Material(1, albedo, fuzz, 0)));
                 } else {

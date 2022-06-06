@@ -5,7 +5,7 @@ precision mediump float;
 
 const float INF = 9999999999.9;
 const float PI = 3.1415926535897932385;
-const int MAX_NUM_SPHERES = 10;
+const int MAX_NUM_SPHERES = 100;
 const int NUM_AA_SAMPLES = 100;
 const int MAX_NUM_RAY_BOUNCE = 10;
 
@@ -133,8 +133,8 @@ struct Sphere{
 	Material mat;
 };
 
-uniform Sphere spheres[MAX_NUM_SPHERES];
-uniform int numSpheres;
+uniform Sphere u_spheres[MAX_NUM_SPHERES];
+uniform int u_numSpheres;
 #pragma endregion
 
 #pragma region Hit
@@ -280,34 +280,34 @@ vec3 RayColor(Ray r, Sphere spheres[MAX_NUM_SPHERES], int numSpheres) {
 void main() {
 	// Camera
 	Camera cam;
-	vec3 lookfrom = vec3(-2,2,1);
-	vec3 lookat = vec3(0,0,-1);
+	vec3 lookfrom = vec3(13,2,3);
+	vec3 lookat = vec3(0,0,0);
 	vec3 vup = vec3(0, 1, 0);
 	float aspect_ratio = 16.0/9.0;
-	float vfov = 90.0;
+	float vfov = 20.0;
 
 	set_camera(cam, lookfrom, lookat, vup, vfov, aspect_ratio);
 
 	// Spheres
-	Sphere spheres[MAX_NUM_SPHERES];
-	int numSpheres = 5;
-	Material material_ground = Material(0, vec3(0.8, 0.8, 0.0), 0.0, 0.0);
-    Material material_center = Material(0, vec3(0.1, 0.2, 0.5), 0.0,  0.0);
-    Material material_left   = Material(2, vec3(0.8, 0.8, 0.8), 0.3,  1.5);
-    Material material_right  = Material(1, vec3(0.8, 0.6, 0.2), 0.0,  0.0);
+	// Sphere spheres[MAX_NUM_SPHERES];
+	// int numSpheres = 5;
+	// Material material_ground = Material(0, vec3(0.8, 0.8, 0.0), 0.0, 0.0);
+    // Material material_center = Material(0, vec3(0.1, 0.2, 0.5), 0.0,  0.0);
+    // Material material_left   = Material(2, vec3(0.8, 0.8, 0.8), 0.3,  1.5);
+    // Material material_right  = Material(1, vec3(0.8, 0.6, 0.2), 0.0,  0.0);
 
-	spheres[0] = Sphere(vec3( 0.0, -100.5, -1.0), 100.0, material_ground);
-    spheres[1] = Sphere(vec3( 0.0, 0.0, -1.0), 0.5, material_center);
-	spheres[2] = Sphere(vec3( -1.0, 0.0, -1.0), 0.5, material_left);
-	spheres[3] = Sphere(vec3( -1.0, 0.0, -1.0), -0.4, material_left);
-	spheres[4] = Sphere(vec3( 1.0, 0.0, -1.0), 0.5, material_right);
+	// spheres[0] = Sphere(vec3( 0.0, -100.5, -1.0), 100.0, material_ground);
+    // spheres[1] = Sphere(vec3( 0.0, 0.0, -1.0), 0.5, material_center);
+	// spheres[2] = Sphere(vec3( -1.0, 0.0, -1.0), 0.5, material_left);
+	// spheres[3] = Sphere(vec3( -1.0, 0.0, -1.0), -0.4, material_left);
+	// spheres[4] = Sphere(vec3( 1.0, 0.0, -1.0), 0.5, material_right);
 
 	// Shoot Ray
 	vec3 pixel_color = vec3(0,0,0);
 	for(int i=0; i<NUM_AA_SAMPLES; i++) {
 		Ray r;
 		get_camera_ray(r, cam);
-		pixel_color = pixel_color + RayColor(r, spheres, numSpheres);
+		pixel_color = pixel_color + RayColor(r, u_spheres, u_numSpheres);
 	}
 	pixel_color = pixel_color/float(NUM_AA_SAMPLES);
 	pixel_color = sqrt(pixel_color);	// gamma-2 correction
