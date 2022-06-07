@@ -5,18 +5,18 @@ precision mediump float;
 
 const float INF = 9999999999.9;
 const float PI = 3.1415926535897932385;
-const int MAX_NUM_SPHERES = 100;
-const int NUM_AA_SAMPLES = 100;
+const int MAX_NUM_SPHERES = 10;
+const int NUM_AA_SAMPLES = 80;
 const int MAX_NUM_RAY_BOUNCE = 10;
 
 uniform vec2 u_resolution;
 
-#pragma region Debug
+
 // Debug
 bool DEBUG_MARK = false;
-#pragma endregion
 
-#pragma region Random
+
+
 // Random
 float RAND_SEED = 1.0;
 float rand() {
@@ -46,17 +46,17 @@ vec3 rand3_unit() {
 	return vec3(x,y,z);
 	// return normalize(rand3_in_unit_sphere());	//! normalize a zero vector cause bugs	//! TODO: document this avoiding-bug method
 }
-#pragma endregion
 
-#pragma region Utilities
+
+
 // Utilities
 bool near_zero(vec3 v) {
 	float s = 1e-8;
 	return (abs(v[0]) < s) && (abs(v[1]) < s) && (abs(v[2]) < s);
 }
-#pragma endregion
 
-#pragma region Ray
+
+
 // Ray
 struct Ray{
 	vec3 origin;
@@ -66,9 +66,9 @@ struct Ray{
 vec3 ray_at(Ray r, float t) {
 	return r.origin + t * r.direction;
 }
-#pragma endregion
 
-#pragma region Camera
+
+
 // Camera
 struct Camera{
 	vec3 origin;
@@ -110,10 +110,7 @@ void get_camera_ray(out Ray r, Camera cam) {
 				- cam.origin;
 	r.direction = normalize(r.direction);
 }
-#pragma endregion
 
-
-#pragma region Material
 // Material
 struct Material{
 	int mat_index;	// 0: diffuse
@@ -123,9 +120,7 @@ struct Material{
 	float metal_fuzz;
 	float index_of_refraction;
 };
-#pragma endregion
 
-#pragma region Objects
 // Objects
 struct Sphere{
 	vec3 center;
@@ -135,9 +130,7 @@ struct Sphere{
 
 uniform Sphere u_spheres[MAX_NUM_SPHERES];
 uniform int u_numSpheres;
-#pragma endregion
 
-#pragma region Hit
 //  Hit
 struct Hit_record{
 	vec3 p;
@@ -206,10 +199,7 @@ bool hit_spheres(Ray r, Sphere spheres[MAX_NUM_SPHERES], int numSpheres, float t
 	rec = closest_hit_rec;
 	return hit;
 }
-#pragma endregion
 
-
-#pragma region RayTrace
 // RayTrace
 bool diffuseScatter(Ray in_r, Hit_record rec, out Ray out_r, out vec3 attenuation) {
 	vec3 direction = rec.normal + rand3_unit();
@@ -274,17 +264,18 @@ vec3 RayColor(Ray r, Sphere spheres[MAX_NUM_SPHERES], int numSpheres) {
 	
     return total_attenuation * sky_color;
 }
-#pragma endregion
+
 
 
 void main() {
 	// Camera
 	Camera cam;
-	vec3 lookfrom = vec3(13,2,3);
-	vec3 lookat = vec3(0,0,0);
+	vec3 lookfrom = vec3(-8,4,10);
+	// vec3 lookfrom = vec3(0,10,2);
+	vec3 lookat = vec3(0,1,0);
 	vec3 vup = vec3(0, 1, 0);
 	float aspect_ratio = 16.0/9.0;
-	float vfov = 20.0;
+	float vfov = 30.0;
 
 	set_camera(cam, lookfrom, lookat, vup, vfov, aspect_ratio);
 
