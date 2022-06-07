@@ -123,7 +123,7 @@ async function main() {
 
 	// Set uniforms
 	gl.uniform2fv(gl.getUniformLocation(program, "u_resolution"), [gl.canvas.width, gl.canvas.height]);
-	var objects = random_scene3();
+	var objects = random_scene2();
 	setObjectsUniforms(gl, program, objects);
 	
 	// Draw scene
