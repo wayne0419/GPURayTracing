@@ -145,7 +145,7 @@ function random_scene4() {
     return world;
 }
 
-function random_scene5() {
+function random_scene_demo() {
 
 	var world = [];
 
