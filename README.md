@@ -21,7 +21,7 @@
 
 In this project, three versions of Ray Tracer are being implemented.
 1. CPU version
-2. CPU version + Bounding Box & Binary Volume Hierarchy Optimization.
+2. CPU + Bounding Box & Binary Volume Hierarchy Optimization version.
 3. GPU version (WebGL fragment shader).
 I will give a brief introduction of the implementation of the ray tracer and then do a render speed comparison between them.
 
@@ -67,7 +67,23 @@ By putting a second glass sphere with negative radius inside the first glass sph
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/hollow-glass2.png?raw=true)
 
+#### Putting Thre Materials together
 
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/glass.png?raw=true)
+
+## Render Speed Comparison
+
+### CPU version vs CPU + Bounding Box & Binary Volume Hierarchy Optimization version
+
+- Device: GTX 960M + i7-6700HQ
+- 400x255p, 100 anti-aliasing samples, 10 max ray bounces
+- ～500 Spheres
+
+| CPU version | CPU + Bounding Box & Binary Volume Hierarchy Optimization version |
+| ------ | ---------------------------------------- |
+| 12963 s ～3.6 hrs | 296 s ～6 mins |
+
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/cpu-400x225-12963s.png?raw=true)
 
 
 Forward, I throw these pixels inside `lib.solve_debevec` to calculate the g function for R,G,B channels: `g_r`, `g_g`, `g_b`, and then derive the radiance map for each channel: `irradiance_r`, `irradiance_g`, `irradiance_b`. By stacking them, I get the HDR image.
