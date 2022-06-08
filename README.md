@@ -81,7 +81,7 @@ By putting a second glass sphere with negative radius inside the first glass sph
 
 | CPU version | CPU + Bounding Box & Binary Volume Hierarchy Optimization version |
 | ------ | ---------------------------------------- |
-| 12963 s ～3.6 hrs | 296 s ～6 mins |
+| 12963 s (3.6 hrs) | 296 s (6 mins) |
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/cpu-400x225-12963s.png?raw=true)
 
