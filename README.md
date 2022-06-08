@@ -37,10 +37,15 @@ I will give a brief introduction of the implementation of the ray tracer and the
 
 Three different diffuse method are being implemented.
 - unit_sphere diffuse
+
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-3unit_sphere_diffuse.png?raw=true)
+
 - hemisphere diffuse
+
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-5hemisphere_diffuse.png?raw=true)
+
 - lambertian diffuse
+
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-4lambertian_diffuse.png?raw=true)
 
 
