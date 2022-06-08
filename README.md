@@ -59,6 +59,15 @@ Metal material indlucde shiny metal and fuzzy metal.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/fuzzy_metal.png?raw=true)
 
+#### Glass
+
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/glass2.png?raw=true)
+
+By putting a second glass sphere with negative radius inside the first glass sphere, I can get a hollow glass effect.
+
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/hollow-glass2.png?raw=true)
+
+
 
 
 Forward, I throw these pixels inside `lib.solve_debevec` to calculate the g function for R,G,B channels: `g_r`, `g_g`, `g_b`, and then derive the radiance map for each channel: `irradiance_r`, `irradiance_g`, `irradiance_b`. By stacking them, I get the HDR image.
