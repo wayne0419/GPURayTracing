@@ -48,6 +48,18 @@ Three different diffuse method are being implemented.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-4lambertian_diffuse.png?raw=true)
 
+#### Metal
+
+Metal material indlucde shiny metal and fuzzy metal.
+- shiny metal
+
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/shiny_metal.png?raw=true)
+
+- fuzzy metal
+
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/fuzzy_metal.png?raw=true)
+
+
 
 Forward, I throw these pixels inside `lib.solve_debevec` to calculate the g function for R,G,B channels: `g_r`, `g_g`, `g_b`, and then derive the radiance map for each channel: `irradiance_r`, `irradiance_g`, `irradiance_b`. By stacking them, I get the HDR image.
 
