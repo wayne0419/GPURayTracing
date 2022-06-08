@@ -37,10 +37,12 @@ I will give a brief introduction of the implementation of the ray tracer and the
 
 Three different diffuse method are being implemented.
 - unit_sphere diffuse
-![img]("https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-3(avoid shadow acne).png?raw=true")
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-3unit_sphere_diffuse.png?raw=true)
 - hemisphere diffuse
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-5hemisphere_diffuse.png?raw=true)
 - lambertian diffuse
-But the result are almost the same.
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-4lambertian_diffuse.png?raw=true)
+
 
 Forward, I throw these pixels inside `lib.solve_debevec` to calculate the g function for R,G,B channels: `g_r`, `g_g`, `g_b`, and then derive the radiance map for each channel: `irradiance_r`, `irradiance_g`, `irradiance_b`. By stacking them, I get the HDR image.
 
