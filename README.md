@@ -1,50 +1,39 @@
-# VFX Project 1: High Dynamic Range Imaging
+# Ray Tracing : CPU version vs CPU + Bounding Box + BVH version vs GPU version
 
 ## Author
 
-- 網媒所 王哲瑋 Che Wei Wang r10944037
+- 網媒所 王哲瑋 Che Wei Wang R10944037
 
 
 ## Code Structure
 
-- `run.sh`：run `main.py` with predefined arguments.
-- `main.py`：will handle command line arguments and then `import lib` and `import utilities` to run the Debevec's HDR Method.
-- `lib.py`：implementation of Debevec's Methods.
-- `utilities.py`：handle some trivial functions，like `show_multiple_images`.
+- `main.js`：setting up rendering scene using webgl.
+- `raytrace.frag`, `raytrace.vert`：fragment shader and vertex shader where ray tracing is implemented.
+- `m3.js`, `m4.js`, `v3.js`：some 3D maths functions.
+- `utilities.js`：some convenient utility functions.
+- `index.html`：web page that hold the render canvas.
+
+## How To Execute/Demo
+- visit https://wayne0419.github.io/GPURayTracing/ for a demo of the GPU version.
 
 
-## How To Execute
-- Data format:
-	- Images should be named from 0 to N, where N is the number of your images.
-	- ExposureTime should be stored in a file named exposures.txt , this file is not required if you have exposure time kept in your images' metadata.
-- Execution methods:
-	1. Execute `./code/run.sh` while in `./code`.
-	2. Run `./code/main.py` with arguments:
+## About The Project
 
-|  Argument  |                         Explanation                          | Required |
-| :--------: | :----------------------------------------------------------: | :------: |
-| input_dir  |                 The directory where you put all your input images|   Yes    |
-| image_extension | The extension of your image files | Yes |
-| image_num | The number of your input images | Yes |
-| exposure_path |            The path to your exposures.txt             | Optional |
-| output_dir | The directory where you want to store all the outputs (including g_function plot, hdr file, tone_mapped hdr file with different parameters) |   Yes    |
+In this project, three versions of Ray Tracer are being implemented.
+1. CPU version
+2. CPU version + Bounding Box & Binary Volume Hierarchy Optimization.
+3. GPU version (WebGL fragment shader).
+I will give a brief introduction of the implementation of the ray tracer and then do a render speed comparison between them.
 
+## Implemented Features Details Of The Ray Tracer (For all 3 versions)
 
-## About The Algorithm
+### Anti-Aliasing
 
-The algorithm being implemented in this project is Debevec's Method。
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/antialiasing.png?raw=true)
 
-![img](https://github.com/wayne0419/NTUVFX/blob/main/proj1/readme_material/debevec.png?raw=true)
+### Three Materials
 
-After solving the gunction g in the above formula, I can use the below formula to calculate the radiance of every pixel.
-
-![img](https://github.com/wayne0419/NTUVFX/blob/main/proj1/readme_material/debevec2.png?raw=true)
-
-This has to be done for every channel: R,G,B. In the end, I will get the radiance map for all three channels, and after stacking them together, I can get the HDR.
-
-## Implementation Details
-
-First, I have to handle the reading of the images. My implementation allows user to choose to provide images either with exposure data kept inside the metadata of the images or with an extra file `exposures.txt` that keeps the exposure data.
+#### Diffuse
 
 Then, for sampling pixels, I have tried
 - random sampling
