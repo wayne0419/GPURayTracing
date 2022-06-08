@@ -25,7 +25,7 @@ In this project, three versions of Ray Tracer are being implemented.
 3. GPU version (WebGL fragment shader).
 I will give a brief introduction of the implementation of the ray tracer and then do a render speed comparison between them.
 
-## Implemented Features Details Of The Ray Tracer (For all 3 versions)
+## Implemented Features Details Of The Ray Tracer
 
 ### Anti-Aliasing
 
