@@ -79,11 +79,23 @@ By putting a second glass sphere with negative radius inside the first glass sph
 - 400x255p, 100 anti-aliasing samples, 10 max ray bounces
 - ～500 Spheres
 
-| CPU version | 12963 s (3.6 hrs) |
-| ------ | ---------------------- |
-| **CPU + Bounding Box & Binary Volume Hierarchy Optimization version** | **296 s (6 mins)** |
+| CPU version | CPU + Bounding Box & Binary Volume Hierarchy Optimization version |
+| ------ | ---------------------------------------- |
+| 12963 s (3.6 hrs) | 296 s (6 mins) |
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/cpu-400x225-12963s.png?raw=true)
+
+### CPU version vs CPU + Bounding Box & Binary Volume Hierarchy Optimization version vs GPU version
+
+- Device: GTX 960M + i7-6700HQ
+- 400x255p, 80 anti-aliasing samples, 10 max ray bounces
+- ～10 Spheres
+
+| CPU version | CPU + BB & BVH version | GPU version |
+| ------ | --------------------- | --------- |
+| 56 s  | 73 s | ～1 s |
+
+![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/cpu-bvh-400x225-73s.png?raw=true)
 
 
 Forward, I throw these pixels inside `lib.solve_debevec` to calculate the g function for R,G,B channels: `g_r`, `g_g`, `g_b`, and then derive the radiance map for each channel: `irradiance_r`, `irradiance_g`, `irradiance_b`. By stacking them, I get the HDR image.
