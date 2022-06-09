@@ -32,7 +32,7 @@ I will give a brief introduction of the implementation of the ray tracer and the
 
 The method that I use to do anti-aliasing is that when rendering a pixel, instead of sending a ray through the center of a pixel and using the color that ray gets to render the whole pixel, I send multiple rays through different positions of that pixel and then use the average color of those rays to render the pixel.
 
-Below id a comparison of w/o anti-aliasing.
+Below is a comparison of without vs. with anti-aliasing.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/antialiasing.png?raw=true)
 
@@ -66,7 +66,7 @@ For lambertian diffuse, the reflected target lies at a random position on the su
 
 ### Metal
 
-Metal material indlucde shiny metal and fuzzy metal.
+Metal material include shiny metal and fuzzy metal.
 
 The difference between them is that for fuzzy metal, a small random shift is applied to the target of the reflected ray.
 
