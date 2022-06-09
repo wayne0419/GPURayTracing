@@ -23,11 +23,14 @@ In this project, three versions of Ray Tracer are being implemented.
 1. CPU version
 2. CPU + Bounding Box & Binary Volume Hierarchy Optimization version.
 3. GPU version (WebGL fragment shader).
+
 I will give a brief introduction of the implementation of the ray tracer and then do a render speed comparison between them.
 
 ## Implemented Features Details Of The Ray Tracer
 
 ### Anti-Aliasing
+
+The method that I use to do anti-aliasing is that when rendering a pixel, instead of sending a ray through the center of a pixel and using the color that ray gets to render the whole pixel, I send multiple rays through different positions of that pixel and then use the average color of those rays to render the pixle.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/antialiasing.png?raw=true)
 
@@ -76,19 +79,19 @@ By putting a second glass sphere with negative radius inside the first glass sph
 ### CPU version vs CPU + Bounding Box & Binary Volume Hierarchy Optimization version
 
 - Device: GTX 960M + i7-6700HQ
-- 400x255p, 100 anti-aliasing samples, 10 max ray bounces
+- 400x225p, 100 anti-aliasing samples, 10 max ray bounces
 - ～500 Spheres
 
 | CPU version | CPU + Bounding Box & Binary Volume Hierarchy Optimization version |
 | ------ | ---------------------------------------- |
-| 12963 s (3.6 hrs) | 296 s (6 mins) |
+| 12963 s (3.6 hrs) | 296 s (5 mins) |
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/cpu-400x225-12963s.png?raw=true)
 
 ### CPU version vs GPU version
 
 - Device: GTX 960M + i7-6700HQ
-- 400x255p, 80 anti-aliasing samples, 10 max ray bounces
+- 400x225p, 80 anti-aliasing samples, 10 max ray bounces
 - ～10 Spheres
 
 | CPU version | CPU + BB & BVH version | GPU version |
