@@ -30,7 +30,9 @@ I will give a brief introduction of the implementation of the ray tracer and the
 
 ### Anti-Aliasing
 
-The method that I use to do anti-aliasing is that when rendering a pixel, instead of sending a ray through the center of a pixel and using the color that ray gets to render the whole pixel, I send multiple rays through different positions of that pixel and then use the average color of those rays to render the pixle.
+The method that I use to do anti-aliasing is that when rendering a pixel, instead of sending a ray through the center of a pixel and using the color that ray gets to render the whole pixel, I send multiple rays through different positions of that pixel and then use the average color of those rays to render the pixel.
+
+Below id a comparison of w/o anti-aliasing.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/antialiasing.png?raw=true)
 
@@ -39,6 +41,11 @@ The method that I use to do anti-aliasing is that when rendering a pixel, instea
 #### Diffuse
 
 Three different diffuse method are being implemented.
+
+The idea of a diffuse surface is that when light/ray that hits it, the reflected light/ray goes into random direction.
+
+The difference between this three different diffuse methods lies in the way they randomize the reflected light/ray.
+
 - unit_sphere diffuse
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-3unit_sphere_diffuse.png?raw=true)
