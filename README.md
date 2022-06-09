@@ -26,7 +26,7 @@ In this project, three versions of Ray Tracer are being implemented.
 
 I will give a brief introduction of the implementation of the ray tracer and then do a render speed comparison between them.
 
-## Implemented Features Details Of The Ray Tracer
+## Implemented Feature Details Of The Ray Tracer
 
 ### Anti-Aliasing
 
@@ -98,7 +98,7 @@ By putting a second glass sphere with negative radius inside the first glass sph
 
 ## Render Speed Comparison
 
-### CPU version vs CPU + Bounding Box & Binary Volume Hierarchy Optimization version
+### CPU version vs. CPU + Bounding Box & Binary Volume Hierarchy Optimization version
 
 - Device: GTX 960M + i7-6700HQ
 - 400x225p, 100 anti-aliasing samples, 10 max ray bounces
@@ -110,7 +110,7 @@ By putting a second glass sphere with negative radius inside the first glass sph
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/cpu-400x225-12963s.png?raw=true)
 
-### CPU version vs GPU version
+### CPU version vs. GPU version
 
 - Device: GTX 960M + i7-6700HQ
 - 400x225p, 80 anti-aliasing samples, 10 max ray bounces
