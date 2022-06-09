@@ -38,13 +38,13 @@ Below id a comparison of w/o anti-aliasing.
 
 ### Three Materials
 
-#### Diffuse
+### Diffuse
 
 Three different diffuse method are being implemented.
 
 The idea of a diffuse surface is that when light/ray that hits it, the reflected light/ray goes into random direction.
 
-The difference between this three different diffuse methods lies in the way they randomize the reflected light/ray.
+The difference between this three diffuse methods lies in the way they randomize the reflected light/ray.
 
 - unit_sphere diffuse
 
@@ -64,7 +64,7 @@ For lambertian diffuse, the reflected target lies at a random position on the su
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-4lambertian_diffuse.png?raw=true)
 
-#### Metal
+### Metal
 
 Metal material indlucde shiny metal and fuzzy metal.
 
@@ -78,7 +78,7 @@ The difference between them is that for fuzzy metal, a small random shift is app
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/fuzzy_metal.png?raw=true)
 
-#### Glass
+### Glass
 
 To implement a glass surface, we need to decide when should a ray reflect, when should it refract.
 
@@ -92,7 +92,7 @@ By putting a second glass sphere with negative radius inside the first glass sph
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/hollow-glass2.png?raw=true)
 
-#### Putting Thre Materials together
+### Putting Thre Materials together
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/glass.png?raw=true)
 
