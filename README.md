@@ -47,20 +47,25 @@ The idea of a diffuse surface is that when light/ray that hits it, the reflected
 The difference between this three different diffuse methods lies in the way they randomize the reflected light/ray.
 
 - unit_sphere diffuse
+For unit_sphere diffuse, the reflected target lies at a random position inside the unit sphere tangent to the hit object at the hit point.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-3unit_sphere_diffuse.png?raw=true)
 
 - hemisphere diffuse
+For hemisphere diffuse, the reflected target lies at a random position inside a unit hemi-sphere centered at the hit point.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-5hemisphere_diffuse.png?raw=true)
 
 - lambertian diffuse
+For lambertian diffuse, the reflected target lies at a random position on the surface of the unit sphere tangent to the hit object at the hit point.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/6-4lambertian_diffuse.png?raw=true)
 
 #### Metal
 
 Metal material indlucde shiny metal and fuzzy metal.
+The difference between them is that for fuzzy metal, a small random shift is applied to the target of the reflected ray.
+
 - shiny metal
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/shiny_metal.png?raw=true)
@@ -70,6 +75,12 @@ Metal material indlucde shiny metal and fuzzy metal.
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/fuzzy_metal.png?raw=true)
 
 #### Glass
+
+To implement a glass surface, we need to decide when should a ray reflect, when should it refract.
+
+When the incident ray angle is large enough, only reflection happens.
+
+When the incident ray angle decreases, the chance of refraction increases.
 
 ![img](https://github.com/wayne0419/GPURayTracing/blob/main/readme_material/glass2.png?raw=true)
 
